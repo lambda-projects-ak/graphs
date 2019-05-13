@@ -64,36 +64,47 @@ class Graph:
             visited = set()
 
         # mark the starting node as visited
-        print(starting_vertex)
+        # print(starting_vertex)
         visited.add(starting_vertex)
         for neighbor in self.vertices[starting_vertex]:
             if neighbor not in visited:
                 self.dft_recursive(neighbor, visited)
         # call dft_recursive on each unvisited neighbors
 
-    def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
+    def bfs(self, starting_vertex, destination_vertex, visited=None):
+        # Return a list containing the shortest path from
+        # starting_vertex to destination_vertex in breath-first order.
         q = Queue()
-        shortest = []
+        path = []
+        solution = []
 
         q.enqueue(starting_vertex)
 
         while q.size() > 0:
             v = q.dequeue()
-            if v not in shortest and v is not destination_vertex:
-                shortest.append(v)
+            if v not in path and v is not destination_vertex:
+                path.append([v, self.vertices[v]])
                 for child in self.vertices[v]:
-                    print(shortest, child)
                     q.enqueue(child)
             elif v is destination_vertex:
-                shortest.append(destination_vertex)
+                path.append(destination_vertex)
                 break
 
-        print(shortest)
+        path.reverse()
+        current_value = path[0]
+
+        # loop over list
+        for i in range(1, len(path) - 1):
+            next_node_children = path[i + 1][1]
+            # compare index, to index + 1 at index 1
+            if current_value in next_node_children:
+                solution.append(current_value)
+                current_value = path[i + 1][0]
+        solution.append(starting_vertex)
+        solution.reverse()
+
+        print(path)
+        print("Solution", solution)
 
     def dfs(self, starting_vertex, destination_vertex):
         # Return a list containing a path from starting_vertex
