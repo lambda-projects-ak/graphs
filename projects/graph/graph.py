@@ -90,17 +90,27 @@ class Graph:
                 path.append(destination_vertex)
                 break
 
+        # reverse list so loop doesn't have to iterate backwards
         path.reverse()
+
+        # current value references set before loop because it has no children associated
         current_value = path[0]
 
         # loop over list
         for i in range(1, len(path) - 1):
+            # store children of next node in variable
             next_node_children = path[i + 1][1]
-            # compare index, to index + 1 at index 1
+
+            # compare current node with children of current node
+            # if there is a match, it's part of the shortest path
+            # append current value and set current value to next value
             if current_value in next_node_children:
                 solution.append(current_value)
                 current_value = path[i + 1][0]
+
+        # add on starting value since it's always going to be in the path
         solution.append(starting_vertex)
+        # reverse to get solution
         solution.reverse()
 
         print(path)
