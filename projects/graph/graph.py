@@ -110,16 +110,47 @@ class Graph:
 
         # add on starting value since it's always going to be in the path
         solution.append(starting_vertex)
-        # reverse to get solution
+        # reverse to get
         solution.reverse()
 
         print(path)
         print("Solution", solution)
 
+    # Brady Solution Code
+    def bfs2(self, starting_vertex, destination_vertex):
+        """
+        Return a list containing the shortest path from
+        starting_vertex to destination_vertex in
+        breath-first order.
+        """
+        # Create an empty Queue
+        q = Queue()
+        # Create an empty Visited set
+        visited = set()
+        # Add A PATH TO the starting vertex to the queue
+        q.enqueue([starting_vertex])
+        # While the queue is not empty...
+        while q.size() > 0:
+            # Dequeue the first PATH
+            path = q.dequeue()
+            # Grab the last vertex of the path
+            v = path[-1]
+            # Check if it's our destination
+            if v == destination_vertex:
+                return path
+            # If it has not been visited...
+            if v not in visited:
+                # Mark it as visited (add it to the visited set)
+                visited.add(v)
+                # Then enqueue PATHS TO each of its neighbors in the queue
+                for neighbor in self.vertices[v]:
+                    path_copy = path.copy()
+                    path_copy.append(neighbor)
+                    q.enqueue(path_copy)
+
     def dfs(self, starting_vertex, destination_vertex):
         # Return a list containing a path from starting_vertex
         # to destination_vertex in depth-first order.
-
         s = Stack()
         destination_path = []
 
@@ -139,6 +170,38 @@ class Graph:
                 break
 
         print("DFS", destination_path)
+
+    # Brady Solution Code
+    def dfs2(self, starting_vertex, destination_vertex):
+        """
+        Return a list containing a path from
+        starting_vertex to destination_vertex in
+        depth-first order.
+        """
+        # Create an empty Stack
+        s = Stack()
+        # Create an empty Visited set
+        visited = set()
+        # Add A PATH TO the starting vertex to the queue
+        s.push([starting_vertex])
+        # While the stack is not empty...
+        while s.size() > 0:
+            # Pop the first PATH
+            path = s.pop()
+            # Grab the last vertex of the path
+            v = path[-1]
+            # Check if it's our destination
+            if v == destination_vertex:
+                return path
+            # If it has not been visited...
+            if v not in visited:
+                # Mark it as visited (add it to the visited set)
+                visited.add(v)
+                # Then push PATHS TO each of its neighbors in the stack
+                for neighbor in self.vertices[v]:
+                    path_copy = path.copy()
+                    path_copy.append(neighbor)
+                    s.push(path_copy)
 
 
 if __name__ == '__main__':

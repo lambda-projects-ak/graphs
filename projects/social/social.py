@@ -1,8 +1,15 @@
 
+import random
+from util import Queue
+
 
 class User:
     def __init__(self, name):
         self.name = name
+
+    def __repr__(self):
+        return self.name
+
 
 class SocialGraph:
     def __init__(self):
@@ -44,11 +51,32 @@ class SocialGraph:
         self.lastID = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # Add users
+        # Time Complexity: O(numUsers)
+        # Space Complexity: O(numUsers)
+        for i in range(numUsers):
+            self.addUser(f"User {i + 1}")
 
         # Create friendships
+        # avgFriendships = totalFriendships / numUsers
+        # totalFriendships = avgFriendships * numUsers
+        # Time Complexity: O(numUsers ^ 2)
+        # Space Complexity: O(numUsers ^ 2)
+        possibleFriendships = []
+        for userID in self.users:
+            for friendID in range(userID + 1, self.lastID + 1):
+                possibleFriendships.append((userID, friendID))
+
+        # Time Complexity: O(numUsers ^ 2)
+        # Space Complexity: O(1)
+        random.shuffle(possibleFriendships)
+
+        # Time Complexity: O(avgFriendships * numUsers // 2)
+        # Space Complexity: O(avgFriendships * numUsers // 2)
+        for friendship_index in range(avgFriendships * numUsers // 2):
+            friendship = possibleFriendships[friendship_index]
+            self.addFriendship(friendship[0], friendship[1])
 
     def getAllSocialPaths(self, userID):
         """
@@ -59,14 +87,26 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
+        q = Queue()
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        visited[userID] = [userID]
+        parent_path = visited[userID]
+        q.enqueue([self.friendships[userID], parent_path])
+        while q.size() > 0:
+            friends = q.dequeue()
+            friends_set = friends[0]
+            parent_path = friends[1]
+            for friend in friends_set:
+                if friend not in visited:
+                    q.enqueue([self.friendships[friend],
+                               [*parent_path, friend]])
+                    visited[friend] = [*parent_path, friend]
         return visited
 
 
 if __name__ == '__main__':
     sg = SocialGraph()
-    sg.populateGraph(10, 2)
+    sg.populateGraph(1000, 5)
     print(sg.friendships)
     connections = sg.getAllSocialPaths(1)
     print(connections)
